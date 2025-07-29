@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team - FiveM Server</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .navbar {
+            background: rgba(0, 0, 0, 0.9);
+            padding: 1rem 2rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 102, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .navbar.scrolled {
+            padding: 0.8rem 2rem;
+            background: rgba(0, 0, 0, 0.95);
+            box-shadow: 0 5px 20px rgba(0, 102, 255, 0.1);
+        }
+
+        .nav-brand {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #fff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-brand i {
+            color: #0066ff;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #888;
+            text-decoration: none;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #0066ff, #003366);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #fff;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-links a.active {
+            color: #0066ff;
+        }
+
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        .team-content {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 100px auto 50px;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .team-card {
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            transition: 0.3s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(0, 102, 255, 0.2);
+        }
+
+        .team-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(0, 102, 255, 0.2),
+                transparent
+            );
+            transform: skewX(-25deg);
+            transition: 0.5s;
+        }
+
+        .team-card:hover::before {
+            animation: shimmer 1.5s infinite;
+        }
+
+        .team-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 102, 255, 0.2);
+        }
+
+        .team-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            border: 3px solid #0066ff;
+            padding: 3px;
+            background: linear-gradient(45deg, #0066ff, #003366);
+        }
+
+        .team-avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .team-name {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: #fff;
+        }
+
+        .team-rank {
+            display: inline-block;
+            padding: 0.3rem 1rem;
+            background: linear-gradient(45deg, #0066ff, #003366);
+            border-radius: 20px;
+            color: #fff;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .team-discord {
+            color: #888;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .team-discord i {
+            color: #7289da;
+            margin-right: 0.5rem;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 200%; }
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: rgba(0, 0, 0, 0.9);
+            border-radius: 15px;
+            padding: 2rem;
+            max-width: 600px;
+            width: 90%;
+            position: relative;
+            border: 1px solid rgba(0, 102, 255, 0.2);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            color: #888;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .close-modal:hover {
+            color: #0066ff;
+        }
+
+        .modal-title {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+
+        .modal-text {
+            color: #888;
+            line-height: 1.6;
+        }
+
+        .modal-tasks {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(0, 102, 255, 0.2);
+        }
+
+        .modal-tasks h3 {
+            color: #0066ff;
+            margin-bottom: 1rem;
+        }
+
+        .modal-tasks ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .modal-tasks li {
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+            color: #888;
+        }
+
+        .modal-tasks li::before {
+            content: '•';
+            color: #0066ff;
+            position: absolute;
+            left: 0;
+        }
+
+        footer {
+            background: rgba(0, 0, 0, 0.95);
+            padding: 3rem 2rem;
+            margin-top: 4rem;
+            border-top: 2px solid rgba(0, 102, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(0, 102, 255, 0.3),
+                transparent
+            );
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+            position: relative;
+        }
+
+        .footer-content::after {
+            content: '';
+            position: absolute;
+            bottom: -2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50%;
+            height: 1px;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(0, 102, 255, 0.3),
+                transparent
+            );
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 2.5rem;
+            background: rgba(0, 102, 255, 0.05);
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            border: 1px solid rgba(0, 102, 255, 0.1);
+        }
+
+        .footer-links a {
+            color: #888;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 1rem;
+            font-size: 1.1rem;
+            border-radius: 20px;
+        }
+
+        .footer-links a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #0066ff, #003366);
+            border-radius: 20px;
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: -1;
+        }
+
+        .footer-links a:hover {
+            color: #fff;
+            text-shadow: 0 0 10px rgba(0, 102, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .footer-links a:hover::before {
+            opacity: 0.2;
+        }
+
+        .footer-copyright {
+            color: #888;
+            font-size: 1rem;
+            text-align: right;
+            padding: 1rem 2rem;
+            background: rgba(0, 102, 255, 0.05);
+            border-radius: 50px;
+            border: 1px solid rgba(0, 102, 255, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 1rem;
+            }
+
+            .nav-links {
+                gap: 1rem;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .footer-links {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">
+            <i class="fas fa-gamepad"></i>
+            <span>FiveM Server</span>
+        </div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="rules.html">Rules</a>
+            <a href="team.html" class="active">Team</a>
+            <a href="discord.html">Discord</a>
+        </div>
+    </nav>
+
+    <main class="team-content">
+        <h1>Our Team</h1>
+        <div class="team-grid">
+            <div class="team-card" data-member="max">
+                <div class="team-avatar">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Crect width='120' height='120' fill='%23333'/%3E%3C/svg%3E" alt="Max Mustermann">
+                </div>
+                <h2 class="team-name">Max Mustermann</h2>
+                <span class="team-rank">Server Owner</span>
+                <div class="team-discord">
+                    <i class="fab fa-discord"></i> Max#1234
+                </div>
+            </div>
+
+            <div class="team-card" data-member="anna">
+                <div class="team-avatar">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Crect width='120' height='120' fill='%23333'/%3E%3C/svg%3E" alt="Anna Mustermann">
+                </div>
+                <h2 class="team-name">Anna Mustermann</h2>
+                <span class="team-rank">Head Admin</span>
+                <div class="team-discord">
+                    <i class="fab fa-discord"></i> Anna#5678
+                </div>
+            </div>
+
+            <div class="team-card" data-member="tom">
+                <div class="team-avatar">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Crect width='120' height='120' fill='%23333'/%3E%3C/svg%3E" alt="Tom Mustermann">
+                </div>
+                <h2 class="team-name">Tom Mustermann</h2>
+                <span class="team-rank">Senior Admin</span>
+                <div class="team-discord">
+                    <i class="fab fa-discord"></i> Tom#9012
+                </div>
+            </div>
+
+            <div class="team-card" data-member="lisa">
+                <div class="team-avatar">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Crect width='120' height='120' fill='%23333'/%3E%3C/svg%3E" alt="Lisa Mustermann">
+                </div>
+                <h2 class="team-name">Lisa Mustermann</h2>
+                <span class="team-rank">Admin</span>
+                <div class="team-discord">
+                    <i class="fab fa-discord"></i> Lisa#3456
+                </div>
+            </div>
+
+            <div class="team-card" data-member="paul">
+                <div class="team-avatar">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Crect width='120' height='120' fill='%23333'/%3E%3C/svg%3E" alt="Paul Mustermann">
+                </div>
+                <h2 class="team-name">Paul Mustermann</h2>
+                <span class="team-rank">Admin</span>
+                <div class="team-discord">
+                    <i class="fab fa-discord"></i> Paul#7890
+                </div>
+            </div>
+
+            <div class="team-card" data-member="sarah">
+                <div class="team-avatar">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Crect width='120' height='120' fill='%23333'/%3E%3C/svg%3E" alt="Sarah Mustermann">
+                </div>
+                <h2 class="team-name">Sarah Mustermann</h2>
+                <span class="team-rank">Moderator</span>
+                <div class="team-discord">
+                    <i class="fab fa-discord"></i> Sarah#2345
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="modal" id="teamModal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 class="modal-title"></h2>
+            <p class="modal-text"></p>
+            <div class="modal-tasks">
+                <h3>Responsibilities</h3>
+                <ul class="tasks-list"></ul>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="imprint.html" target="_blank">Imprint</a>
+                <a href="privacy.html" target="_blank">Privacy</a>
+            </div>
+            <div class="footer-copyright">
+                &copy; 2024 FiveM Server. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById('teamModal');
+            const modalTitle = modal.querySelector('.modal-title');
+            const modalText = modal.querySelector('.modal-text');
+            const tasksList = modal.querySelector('.tasks-list');
+            const closeModal = modal.querySelector('.close-modal');
+            const teamCards = document.querySelectorAll('.team-card');
+
+            const teamInfo = {
+                max: {
+                    title: 'Max Mustermann - Server Owner',
+                    text: 'Max is the founder and owner of the server. With his vision and passion for roleplay, he created this server.',
+                    tasks: [
+                        'Strategic planning and server development',
+                        'Team management and personnel decisions',
+                        'Financial responsibility',
+                        'Communication with partners and sponsors'
+                    ]
+                },
+                anna: {
+                    title: 'Anna Mustermann - Head Admin',
+                    text: 'Anna is our Head Admin and ensures smooth operation of all administrative processes.',
+                    tasks: [
+                        'Leading the admin team',
+                        'Development and revision of server rules',
+                        'Coordination of events and updates',
+                        'Quality assurance of player experience'
+                    ]
+                },
+                tom: {
+                    title: 'Tom Mustermann - Senior Admin',
+                    text: 'Tom is an experienced Senior Admin who focuses on the technical aspects of the server.',
+                    tasks: [
+                        'Technical maintenance and updates',
+                        'Anti-cheat implementation',
+                        'Server performance optimization',
+                        'Support for the admin team'
+                    ]
+                },
+                lisa: {
+                    title: 'Lisa Mustermann - Admin',
+                    text: 'Lisa is a dedicated Admin who focuses on community and events.',
+                    tasks: [
+                        'Community management',
+                        'Event organization',
+                        'Player support',
+                        'Rule enforcement'
+                    ]
+                },
+                paul: {
+                    title: 'Paul Mustermann - Admin',
+                    text: 'Paul is our Admin for economic and legal matters.',
+                    tasks: [
+                        'Economy system balance',
+                        'Legal compliance',
+                        'Documentation and reporting',
+                        'Player support'
+                    ]
+                },
+                sarah: {
+                    title: 'Sarah Mustermann - Moderator',
+                    text: 'Sarah is an experienced Moderator who ensures a pleasant gaming atmosphere.',
+                    tasks: [
+                        'Chat moderation',
+                        'Player support',
+                        'Rule enforcement',
+                        'Community care'
+                    ]
+                }
+            };
+
+            teamCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    const member = this.dataset.member;
+                    const info = teamInfo[member];
+                    modalTitle.textContent = info.title;
+                    modalText.textContent = info.text;
+                    
+                    tasksList.innerHTML = '';
+                    info.tasks.forEach(task => {
+                        const li = document.createElement('li');
+                        li.textContent = task;
+                        tasksList.appendChild(li);
+                    });
+                    
+                    modal.style.display = 'flex';
+                });
+            });
+
+            closeModal.addEventListener('click', function() {
+                modal.style.display = 'none';
+            });
+
+            window.addEventListener('click', function(event) {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        });
+
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.pageYOffset > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+    </script>
+</body>
+</html> 

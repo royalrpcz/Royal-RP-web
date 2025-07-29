@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rules - FiveM Server</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .rules-container {
+            max-width: 1200px;
+            margin: 120px auto 50px;
+            padding: 2rem;
+        }
+
+        .rules-header {
+            text-align: center;
+            margin-bottom: 4rem;
+            position: relative;
+        }
+
+        .rules-header h2 {
+            font-size: 3rem;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 1rem;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .rules-header p {
+            color: #888;
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto;
+            animation: fadeInUp 0.8s ease 0.2s forwards;
+            opacity: 0;
+        }
+
+        .rules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .rule-card {
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 15px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            animation: fadeInUp 0.6s ease-out forwards;
+            opacity: 0;
+        }
+
+        .rule-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(0, 102, 255, 0.1), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+        }
+
+        .rule-card:hover::before {
+            transform: translateX(100%);
+        }
+
+        .rule-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 10px 30px rgba(0, 102, 255, 0.2);
+            border-color: rgba(0, 102, 255, 0.3);
+        }
+
+        .rule-card .rule-number {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 3rem;
+            font-weight: bold;
+            color: rgba(0, 102, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .rule-card:hover .rule-number {
+            transform: scale(1.2);
+            color: rgba(0, 102, 255, 0.2);
+        }
+
+        .rule-card h3 {
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .rule-card h3 i {
+            font-size: 1.8rem;
+            transition: transform 0.3s ease;
+        }
+
+        .rule-card:hover h3 i {
+            transform: scale(1.2) rotate(5deg);
+        }
+
+        .rule-card p {
+            line-height: 1.6;
+            color: #888;
+            margin-bottom: 1rem;
+        }
+
+        .rule-card .rule-details {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .rule-card .rule-details ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .rule-card .rule-details li {
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+            color: #888;
+        }
+
+        .rule-card .rule-details li::before {
+            content: '•';
+            color: var(--secondary-color);
+            position: absolute;
+            left: 0;
+        }
+
+        .rule-card .rule-details li:hover {
+            color: var(--text-color);
+            transform: translateX(5px);
+            transition: all 0.3s ease;
+        }
+
+        .rule-card:nth-child(1) { animation-delay: 0.1s; }
+        .rule-card:nth-child(2) { animation-delay: 0.2s; }
+        .rule-card:nth-child(3) { animation-delay: 0.3s; }
+        .rule-card:nth-child(4) { animation-delay: 0.4s; }
+        .rule-card:nth-child(5) { animation-delay: 0.5s; }
+        .rule-card:nth-child(6) { animation-delay: 0.6s; }
+
+        .rules-footer {
+            text-align: center;
+            margin-top: 4rem;
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 15px;
+            border: 1px solid rgba(0, 102, 255, 0.2);
+            animation: fadeInUp 0.8s ease 0.7s forwards;
+            opacity: 0;
+        }
+
+        .rules-footer p {
+            color: #888;
+            margin-bottom: 1rem;
+        }
+
+        .rules-footer .warning {
+            color: #ff4444;
+            font-weight: bold;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">
+            <i class="fas fa-gamepad"></i>
+            <span>FiveM Server</span>
+        </div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="rules.html" class="active">Rules</a>
+            <a href="team.html">Team</a>
+            <a href="discord.html">Discord</a>
+        </div>
+    </nav>
+
+    <div class="rules-container">
+        <div class="rules-header">
+            <h2>Server Rules</h2>
+            <p>To ensure a fair and enjoyable gaming experience for everyone, please follow these rules.</p>
+        </div>
+        
+        <div class="rules-grid">
+            <div class="rule-card">
+                <div class="rule-number">01</div>
+                <h3><i class="fas fa-handshake"></i> Respectful Behavior</h3>
+                <p>Treat all players with respect and dignity. Respectful behavior is the foundation of our community.</p>
+                <div class="rule-details">
+                    <ul>
+                        <li>No insults or discrimination</li>
+                        <li>No toxic behavior</li>
+                        <li>No harassment of other players</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="rule-card">
+                <div class="rule-number">02</div>
+                <h3><i class="fas fa-theater-masks"></i> Roleplay Rules</h3>
+                <p>Realistic roleplay is the heart of our server. Follow the roleplay rules for an authentic experience.</p>
+                <div class="rule-details">
+                    <ul>
+                        <li>Realistic behavior is mandatory</li>
+                        <li>No powergaming or metagaming</li>
+                        <li>Character development required</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="rule-card">
+                <div class="rule-number">03</div>
+                <h3><i class="fas fa-comments"></i> Communication</h3>
+                <p>Proper communication is crucial for a good roleplay experience.</p>
+                <div class="rule-details">
+                    <ul>
+                        <li>Local chat for in-character communication</li>
+                        <li>OOC chat only for out-of-character communication</li>
+                        <li>No spam or advertising</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="rule-card">
+                <div class="rule-number">04</div>
+                <h3><i class="fas fa-car"></i> Vehicle Rules</h3>
+                <p>Realistic driving and vehicle usage are important aspects of roleplay.</p>
+                <div class="rule-details">
+                    <ul>
+                        <li>Follow traffic rules</li>
+                        <li>No unrealistic driving</li>
+                        <li>Park vehicles properly</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="rule-card">
+                <div class="rule-number">05</div>
+                <h3><i class="fas fa-gun"></i> Weapons and Combat</h3>
+                <p>Weapons and combat actions must be realistic and justifiable.</p>
+                <div class="rule-details">
+                    <ul>
+                        <li>Weapons only with appropriate license</li>
+                        <li>Realistic combat actions</li>
+                        <li>No RDM (Random Deathmatch)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="rule-card">
+                <div class="rule-number">06</div>
+                <h3><i class="fas fa-shield-alt"></i> General Rules</h3>
+                <p>Additional important rules for a fair gaming experience.</p>
+                <div class="rule-details">
+                    <ul>
+                        <li>No mods or cheats</li>
+                        <li>No bug exploiting</li>
+                        <li>Respect server administration</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="rules-footer">
+            <p>The team reserves the right to take appropriate action for rule violations.</p>
+            <p class="warning">Repeated violations may result in a permanent ban!</p>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="imprint.html" target="_blank">Imprint</a>
+                <a href="privacy.html" target="_blank">Privacy</a>
+            </div>
+            <div class="footer-copyright">
+                &copy; 2024 FiveM Server. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+</body>
+</html> 
