@@ -1,12 +1,12 @@
 :root {
-    --primary-color: #000000;
-    --secondary-color: #0066ff;
-    --accent-color: #003366;
+    --primary-color: #FBCC70;
+    --secondary-color: #f3b031;
+    --accent-color: #FBCE1A;
     --text-color: #ffffff;
     --gradient: linear-gradient(45deg, var(--secondary-color), var(--accent-color));
     --card-bg: rgba(255, 255, 255, 0.05);
-    --card-border: rgba(0, 102, 255, 0.1);
-    --card-hover: rgba(0, 102, 255, 0.2);
+    --card-border: rgba(255, 204, 0, 0.1);
+    --card-hover: rgba(255, 204, 0, 0.2);
 }
 
 * {
@@ -16,7 +16,7 @@
 }
 
 body {
-    font-family: 'Arial', sans-serif;
+    font-family: 'Inter', sans-serif;
     background: var(--primary-color);
     color: var(--text-color);
     line-height: 1.6;
@@ -30,7 +30,7 @@ body {
     top: 0;
     z-index: 1000;
     backdrop-filter: blur(10px);
-    border-bottom: 2px solid rgba(0, 102, 255, 0.3);
+    border-bottom: 2px solid rgba(255, 204, 0, 0.3);
     transition: all 0.3s ease;
     display: flex;
     justify-content: space-between;
@@ -40,7 +40,7 @@ body {
 .navbar.scrolled {
     padding: 0.8rem 2rem;
     background: rgba(0, 0, 0, 0.98);
-    box-shadow: 0 5px 20px rgba(0, 102, 255, 0.15);
+    box-shadow: 0 5px 20px rgba(255, 204, 0, 0.15);
 }
 
 .nav-brand {
@@ -60,7 +60,7 @@ body {
 }
 
 .nav-brand:hover {
-    background: rgba(0, 102, 255, 0.1);
+    background: rgba(255, 229, 128, 0.1);
     transform: translateY(-2px);
 }
 
@@ -79,10 +79,10 @@ body {
     display: flex;
     gap: 2.5rem;
     align-items: center;
-    background: rgba(0, 102, 255, 0.05);
+    background: rgba(255, 229, 128, 0.1);
     padding: 0.5rem 1.5rem;
     border-radius: 50px;
-    border: 1px solid rgba(0, 102, 255, 0.1);
+    border: 1px solid rgba(255, 229, 128, 0.1);
 }
 
 .nav-links a {
@@ -123,7 +123,7 @@ body {
 
 .nav-links a.active {
     color: #0066ff;
-    background: rgba(0, 102, 255, 0.1);
+    background: rgba(255, 229, 128, 0.1);
 }
 
 .burger {
@@ -506,9 +506,9 @@ footer::before {
     font-size: 1rem;
     text-align: right;
     padding: 1rem 2rem;
-    background: rgba(0, 102, 255, 0.05);
+    background: rgba(255, 229, 128, 0.1);
     border-radius: 50px;
-    border: 1px solid rgba(0, 102, 255, 0.1);
+    border: 1px solid rgba(255, 229, 128, 0.1);
 }
 
 @media screen and (max-width: 768px) {
